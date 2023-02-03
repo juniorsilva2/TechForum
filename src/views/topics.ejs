@@ -1,0 +1,52 @@
+<%- include('navDefault.ejs'); %>
+
+
+<div class="content">
+    <div class="center">
+
+        <div class="top">
+            <h1>Tópicos</h1>
+        </div>
+        
+        <details>
+            <summary>
+                <div>
+                    <i data-feather="message-circle"></i>
+                    <h3>Hardware<h3>
+                </div>
+            </summary>
+
+            <% topics.forEach( topic => { %>
+                <li><a href="/<%= topic.id %>/posts"><%= topic.name %></a></li>
+            <% }) %>
+        </details>
+
+
+
+
+
+        <!-- <details>
+            <summary>
+                <div>
+                    <i data-feather="message-circle"></i>
+                    <h3>Software<h3>
+                </div>
+            </summary>
+            <li><a href="">Desenvolvimento WEB</a></li>
+            <li><a href="">Desenvolvimento Mobile</a></li>
+            <li><a href="">React</a></li>
+            <li><a href="">React Native</a></li>
+            <li><a href="">NextJS</a></li>
+            <li><a href="">EJS</a></li>
+        </details> -->
+
+    </div>
+</div>
+
+<script>
+    feather.replace()
+</script>
+
+</body>
+
+</html>

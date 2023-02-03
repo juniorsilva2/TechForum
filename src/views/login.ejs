@@ -1,0 +1,24 @@
+<%- include('head.ejs'); %>
+    
+   <div class="containerPrincipal">
+        <form action="/login" method="post" class="form"> 
+            <hgroup>
+                <h1>Tech Forum</h1>
+                <h3>Login</h3>
+            </hgroup>
+
+            <% if (message) { %>
+                <p>
+                    <label style="color:#F44336"><%= message %></label>
+                </p>
+            <% } %>
+
+            <input type="text" name="email" placeholder="E-mail">
+            <input type="password" name="password" placeholder="Senha">
+            <input type="submit" value="Entrar">
+            <a href="/register">Ainda não possui uma conta ? cadastre-se.</a>
+        </form>
+   </div>
+
+</body> 
+</html>

@@ -1,0 +1,30 @@
+<%- include('navDefault.ejs'); %>
+
+    <div class="content">
+        <div class="center">
+    
+            <details open>
+                <summary>
+                    <div>
+                        <i data-feather="message-circle"></i>
+                        <h3><%= topic.name %><h3>
+                    </div>
+                </summary>
+
+                <% posts.forEach( post => { %>
+                    <li><a href="/<%= topic.id %>/<%= post.id %>"><%= post.title %></a></li>
+                <% }) %>
+
+            </details>
+            
+           
+        </div>
+    </div>
+
+    <script>
+        feather.replace()
+    </script>
+
+</body>
+
+</html>

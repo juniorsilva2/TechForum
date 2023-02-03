@@ -1,0 +1,26 @@
+<%- include('head.ejs'); %>
+    
+    <div class="containerPrincipal">
+        <form action="/register" method="post" class="form-cadastro"> 
+            <hgroup>
+                <h1>Tech Forum</h1>
+                <h3>Cadastro</h3>
+            </hgroup>
+            <div>
+                <input type="text" name="realName" placeholder="Nome">
+            </div>
+            <div class="double">
+                <input type="text" name="userName" placeholder="NickName">
+                <input type="text" name="email" placeholder="E-mail">
+            </div>
+            <div class="double">
+                <input type="password" name="password" placeholder="Senha">
+                <input type="password" name="confirmPassword" placeholder="Confirme a Senha">
+            </div>
+ 
+            <input type="submit" value="Criar Conta">
+            <a href="/login">Voltar para a tela de login</a>
+        </form>
+   </div>
+</body>
+</html>

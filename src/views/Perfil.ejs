@@ -1,0 +1,52 @@
+<%- include('navLoggedIn.ejs'); %>
+
+    <div class="content">
+        <div class="center">
+
+            <div class="comment">
+                <div class="imgUser">
+                    <img src="../utils/upload/<%= user.avatar%>">
+                    <b><%= user.userName %></b>
+                    <p><%= user.reputation %> pontos.</p>
+                    <a href="update.html" class="link">Editar Perfil</a>
+                </div>
+                <div>
+                    <b>Postagens</b>
+                    <hr>
+                    <% posts.forEach(post => { %>
+                        <div class="divpost">
+                            <div class="post">
+                                <b><%= post.title %></b>
+                                <p><%= post.date %></p>
+                            </div>
+                            <div class="actions">
+                                <a href="">Editar</a>
+                                <a href="/">Excluir</a>
+                            </div>
+                        </div>
+                    <% }) %>
+
+                    <b>Comentários</b>
+                    <hr>
+                    <% comments.forEach(comment => { %>
+                        <div class="divpost">
+                            <div class="post">
+                                <b><%= comment.content %></b>
+                                <p><%= comment.date %></p>
+                            </div>
+                            <div class="actions">
+                                <a href="">Editar</a>
+                                <a href="">Excluir</a>
+                            </div>
+                        </div>
+                    <% }) %>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        feather.replace()
+    </script>
+</body>
+</html>
