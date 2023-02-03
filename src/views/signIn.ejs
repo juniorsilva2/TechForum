@@ -6,6 +6,11 @@
                 <h1>Tech Forum</h1>
                 <h3>Cadastro</h3>
             </hgroup>
+
+            <% if (message) { %>
+                <p><label style="color:#F44336"><%= message %></label></p>
+            <% } %>
+            
             <div>
                 <input type="text" name="realName" placeholder="Nome">
             </div>

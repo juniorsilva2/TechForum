@@ -7,10 +7,10 @@
 
         <div>
             <div>
-                <span>Asta Bolado</span>
-                <a href="/auth/logout">Sair</a>
+                <a href="/perfil"><span><%= user.userName %></span></a>
+                <a href="/logout">Sair</a>
             </div>
-            <img src="../utils/upload/<%= user.avatar %>">
+            <img src="/upload/<%= user.avatar %>">
         </div>
 
 

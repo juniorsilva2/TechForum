@@ -2,6 +2,8 @@ const bcrypt = require("bcrypt");
 const passport = require("passport");
 
 const UserModel = require("../models/userModel");
+const PostModel = require("../models/postModel");
+const CommentModel = require("../models/commentModel");
 
 const loginPage = async (req, res) => {
   try {
@@ -46,8 +48,10 @@ const login = async (req, res, next) => {
 
 const logout = async (req, res) => {
   try {
-    req.logout();
-    res.redirect("/");
+    req.logout(function (err) {
+      if (err) return next(err);
+      res.redirect("/");
+    })
   } catch (error) {
     console.log(error.message);
     res.status(500).json({ message: "Server side error ocurred" });
@@ -90,21 +94,21 @@ const register = async (req, res) => {
 
 const getUser = async (req, res) => {
   try {
-    const user = await UserModel.findById(req.params.id, { password: 0 });
-    if (!user) return res.status(404).json({ message: "User not found" });
-    res.status(200).json(user);
+    const user = await UserModel.findById(req.user.id);
+    if (!user) return res.status(404).render("login", { message: "Usuário não encontrado" });
+    const posts = await PostModel.find({ authorID: user.id });
+    const comments = await CommentModel.find({ authorID: user.id });
+    res.render("perfil", { user, posts, comments });
   } catch (error) {
     console.log(error.message);
     res.status(500).json({ message: "Server side error ocurred" });
   }
 };
 
-const getUsers = async (req, res) => {
+const updatePage = async (req, res) => {
   try {
-    const users = await UserModel.find();
-    if (users.length === 0)
-      return res.status(404).json({ message: "No user found" });
-    res.status(200).json(users);
+    const user = await UserModel.findById(req.user.id);
+    res.render("perfilEdit", { message: null, user });
   } catch (error) {
     console.log(error.message);
     res.status(500).json({ message: "Server side error ocurred" });
@@ -113,26 +117,40 @@ const getUsers = async (req, res) => {
 
 const updateUser = async (req, res) => {
   try {
-    const { realName, password, confirmPassword } = req.body;
-    if (!realName || !password || !confirmPassword)
-      return res.status(400).json({ message: "Fields missing" });
+    const { userName, password, confirmPassword } = req.body;
+    const user = await UserModel.findById(req.user.id, { userName: 1, avatar: 1});
+    if (!userName)
+      return res.render("perfilEdit", { message: "Nome de usuário ausente", user });
+    if (user && userName !== user.userName)
+      return res.render("perfilEdit", { message: "Nome de usuário já existe", user });
     if (password !== confirmPassword)
-      return res.status(400).json({ message: "Passwords do not match" });
+      return res.render("perfilEdit", { message: "Senhas não conferem", user });
+    if (userName !== user.userName) {
+      await UserModel.findByIdAndUpdate(req.user.id, {userName: userName});
+      return res.redirect("/perfil");
+    }
 
     const hashedPassword = await bcrypt.hash(
       password,
       Number(process.env.BCRYPT_SECRET)
     );
 
-    await UserModel.findByIdAndUpdate(req.params.id, {
-      realName,
+    await UserModel.findByIdAndUpdate(req.user.id, {
+      userName,
       password: hashedPassword,
     });
 
-    const userUpdated = await UserModel.findById(req.params.id, {
-      password: 0,
-    });
-    res.status(200).json({ message: "User successfully updated", userUpdated });
+    res.redirect("/perfil");
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).json({ message: "Server side error ocurred" });
+  }
+};
+
+const updateAvatarPage = async (req, res) => {
+  try {
+    const user = await UserModel.findById(req.user.id, { userName: 1, avatar: 1 });
+    res.render("perfilAvatar", { message: null, user });
   } catch (error) {
     console.log(error.message);
     res.status(500).json({ message: "Server side error ocurred" });
@@ -141,15 +159,25 @@ const updateUser = async (req, res) => {
 
 const updateAvatar = async (req, res) => {
   try {
+    const user = await UserModel.findById(req.user.id, { userName: 1, avatar: 1 });
     if (!req.file) {
-      return res.status(400).json({ message: "Please upload an image" });
+      return res.render("perfilAvatar", { message: "Por favor faça o upload de uma imagem .PNG, .JPG ou .JPEG", user });
     }
     
-    await UserModel.findByIdAndUpdate(req.params.id, {
+    await UserModel.findByIdAndUpdate(req.user.id, {
       avatar: req.file.filename,
     });
-    const user = await UserModel.findById(req.params.id, { password: 0 });
-    res.status(200).json({ message: "Avatar successfully updated", user });
+    res.redirect("/perfil");
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).json({ message: "Server side error ocurred" });
+  }
+};
+
+const deletePage = async (req, res) => {
+  try {
+    const user = await UserModel.findById(req.user.id, { userName: 1, avatar: 1 });
+    res.render("perfilDelete", { message: null, user });
   } catch (error) {
     console.log(error.message);
     res.status(500).json({ message: "Server side error ocurred" });
@@ -158,10 +186,21 @@ const updateAvatar = async (req, res) => {
 
 const deleteUser = async (req, res) => {
   try {
-    const user = await UserModel.findById(req.params.id);
-    if (!user) return res.status(404).json({ message: "User not found" });
-    await UserModel.findByIdAndRemove(req.params.id);
-    res.status(200).json({ message: "User successfully deleted", user });
+    const { password, confirmPassword } = req.body;
+    const user = await UserModel.findById(req.user.id, { userName: 1, avatar: 1 });
+    if (!password || !confirmPassword)
+      return res.render("perfilDelete", { message: "Por favor preencha todos os campos", user });
+    if (password !== confirmPassword)
+      return res.render("perfilDelete", { message: "Senhas não conferem", user });
+    
+    const userWillDelete = await UserModel.findById(req.user.id);
+    const passMatch = await bcrypt.compare(password, userWillDelete.password);
+    
+    if (!passMatch)
+      return res.render("perfilDelete", { message: "Senha incorreta", user });
+    
+    await UserModel.findByIdAndRemove(userWillDelete.id);
+    res.redirect("/");
   } catch (error) {
     console.log(error.message);
     res.status(500).json({ message: "Server side error ocurred" });
@@ -173,10 +212,12 @@ module.exports = {
   logout,
   register,
   getUser,
-  getUsers,
   updateUser,
   updateAvatar,
   deleteUser,
   loginPage,
   signInPage,
+  updatePage,
+  updateAvatarPage,
+  deletePage,
 };

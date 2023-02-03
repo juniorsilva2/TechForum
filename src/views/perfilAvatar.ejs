@@ -1,0 +1,30 @@
+<%- include('navLoggedIn.ejs'); %>
+
+    <div class="content">
+        <form action="/perfil/avatar" method="post" enctype="multipart/form-data">
+            <hgroup>
+                <h1>Escolha uma imagem pro seu perfil.</h1>
+            </hgroup>
+
+            <hr>
+
+            <div class="fotoperfil">
+                <img src="/upload/<%= user.avatar %>">
+            </div>
+
+            <hr>
+
+            <% if (message) { %>
+                <p><label style="color:#F44336"><%= message %></label></p>
+            <% } %>
+
+            <input type="file" name="image">
+
+            <input type="submit" value="Salvar">
+            <a href="/perfil">Voltar</a>
+        </form>
+    </div>
+
+</body>
+
+</html>

@@ -1,0 +1,23 @@
+<%- include('navLoggedIn.ejs'); %>
+
+
+    <div class="containerPrincipal">
+        <form action="/perfil/edit" method="post" class="form"> 
+            <hgroup>
+                <h1>Preencha os campos abaixo para atualizar o perfil</h1>
+            </hgroup>
+
+            <% if (message) { %>
+                <p><label style="color:#F44336"><%= message %></label></p>
+            <% } %>
+
+            <input type="text" name="userName" value="<%= user.userName %>">
+            <input type="password" name="password" placeholder="Senha">
+            <input type="password" name="confirmPassword" placeholder="Confirme a senha">
+            <input type="submit" value="Salvar">
+            <a href="/perfil" class="link">Voltar</a>
+        </form>
+   </div>
+
+</body> 
+</html>

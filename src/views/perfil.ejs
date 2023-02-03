@@ -5,34 +5,24 @@
 
             <div class="comment">
                 <div class="imgUser">
-                    <img src="../utils/upload/<%= user.avatar%>">
+                    <a href="/perfil/avatar" class="edit">
+                        <i data-feather="edit"></i>
+                    </a>
+                    <img src="/upload/<%= user.avatar%>">
                     <b><%= user.userName %></b>
                     <p><%= user.reputation %> pontos.</p>
-                    <a href="update.html" class="link">Editar Perfil</a>
+                    <a href="/perfil/edit" class="link">Editar Perfil</a>
+                    <a href="/perfil/delete" class="link" style="color: #F44336">Deletar Perfil</a>
                 </div>
                 <div>
                     <b>Postagens</b>
                     <hr>
+                    <% if (posts.length > 0) { %>
                     <% posts.forEach(post => { %>
                         <div class="divpost">
                             <div class="post">
-                                <b><%= post.title %></b>
+                                <a href="/post/<%= post.id %>"><b><%= post.title %></b></a>
                                 <p><%= post.date %></p>
-                            </div>
-                            <div class="actions">
-                                <a href="">Editar</a>
-                                <a href="/">Excluir</a>
-                            </div>
-                        </div>
-                    <% }) %>
-
-                    <b>Comentários</b>
-                    <hr>
-                    <% comments.forEach(comment => { %>
-                        <div class="divpost">
-                            <div class="post">
-                                <b><%= comment.content %></b>
-                                <p><%= comment.date %></p>
                             </div>
                             <div class="actions">
                                 <a href="">Editar</a>
@@ -40,6 +30,29 @@
                             </div>
                         </div>
                     <% }) %>
+                    <% } else { %>
+                        <p>Ainda sem postagens</p>
+                    <% } %>
+
+                    <b>Comentários</b>
+                    <hr>
+                    <% if (comments.length > 0) { %>
+                    <% comments.forEach(comment => { %>
+                        <div class="divpost">
+                            <div class="post">
+                                <a href="/post/<%= comment.postID %>"><b><%= comment.content %></b></a>
+                                <p><%= comment.date %></p>
+                            </div>
+                            <div class="actions">
+                                <a href="">Editar</a>
+                                <a href="">Excluir</a>
+                            </div>
+                        </div>
+                    <% })%>
+                    <% } else { %>
+                        <p>Ainda sem comentários</p>
+                    <% } %>
+
                 </div>
             </div>
         </div>

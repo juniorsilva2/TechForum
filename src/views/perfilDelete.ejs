@@ -1,0 +1,22 @@
+<%- include('navLoggedIn.ejs'); %>
+
+
+    <div class="containerPrincipal">
+        <form action="/perfil/delete" method="post" class="form"> 
+            <hgroup>
+                <h1>Informe sua senha para apagar permanentemente seu perfil</h1>
+            </hgroup>
+
+            <% if (message) { %>
+                <p><label style="color:#F44336"><%= message %></label></p>
+            <% } %>
+
+            <input type="password" name="password" placeholder="Senha">
+            <input type="password" name="confirmPassword" placeholder="Confirme a senha">
+            <input type="submit" style="background-color: #E73C37" value="Apagar Perfil">
+            <a href="/perfil" class="link">Voltar</a>
+        </form>
+   </div>
+
+</body> 
+</html>
