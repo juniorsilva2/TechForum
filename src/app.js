@@ -7,6 +7,8 @@ const bodyParser = require("body-parser");
 const session = require("express-session");
 const passport = require("passport");
 const publicUserRoutes = require("./routes/public/publicUserRoutes");
+const publicTopicRoutes = require("./routes/public/publicTopicRoutes");
+const publicPostRoutes = require("./routes/public/publicPostRoutes");
 const privateUserRoutes = require("./routes/private/privateUserRoutes");
 const privateTopicRoutes = require("./routes/private/privateTopicRoutes");
 const privatePostRoutes = require("./routes/private/privatePostRoutes");
@@ -31,9 +33,11 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 require('./config/passport')(passport);
+app.use(passport.authenticate('session'));
 
 app.use(publicUserRoutes);
-app.use(passport.authenticate('session'));
+app.use(publicTopicRoutes);
+app.use(publicPostRoutes);
 app.use(privateUserRoutes);
 app.use(privateTopicRoutes);
 app.use(privatePostRoutes);

@@ -1,4 +1,8 @@
-<%- include('navDefault.ejs'); %>
+<% if (user) { %>
+    <%- include('navLoggedIn.ejs'); %>
+<% } else {%>
+    <%- include('navDefault.ejs'); %>
+<% } %>
 
     <div class="content">
         <div class="center">
@@ -11,8 +15,12 @@
                     </div>
                 </summary>
 
+                <% if (message) { %>
+                    <p><label><%= message %></label></p>
+                <% } %>
+
                 <% posts.forEach( post => { %>
-                    <li><a href="/<%= topic.id %>/<%= post.id %>"><%= post.title %></a></li>
+                    <li><a href="/post/<%= post.id %>"><%= post.title %></a></li>
                 <% }) %>
 
             </details>

@@ -7,9 +7,4 @@ router.post("/register", userController.register);
 router.get("/login", userController.loginPage);
 router.post("/login", userController.login);
 
-router.get("/", (req, res) => {
-    const user = req.user;
-    res.render("navLoggedIn", { user });
-})
-
 module.exports = router;

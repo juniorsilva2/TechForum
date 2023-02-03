@@ -1,6 +1,7 @@
 const PostModel = require("../models/postModel");
 const UserModel = require("../models/userModel");
 const TopicModel = require("../models/topicModel");
+const CommentModel = require("../models/commentModel");
 
 const createPost = async (req, res) => {
   try {
@@ -30,22 +31,38 @@ const createPost = async (req, res) => {
 };
 
 const getPost = async (req, res) => {
-  try {
-    const post = await PostModel.findById(req.params.id);
-    if (!post) return res.status(404).json({ message: "Post not found" });
-    res.status(200).json(post);
-  } catch (error) {
-    console.log(error.message);
-    res.status(500).json({ message: "Server side error ocurred" });
-  }
+  // try {
+  //   const post = await PostModel.findById(req.params.postID);
+  //   const author = await UserModel.find(post.authorID);
+  //   const comments = await CommentModel.find({ postID: post.id });
+  //   const users = await UserModel.find();
+  //   const commentUsers = comments.forEach((comment) => {
+  //     if (comment.authorID === user)
+  //   })
+  //   if (comments.length === 0)
+  //     return res.render("post", { post, comments, user: null, message: "Nenhum comentário foi feito ainda" });
+  //   if (req.user) {
+  //     const user = await UserModel.findById(req.user.id, { userName: 1, avatar: 1, id: 1});
+  //     return res.render("post", { topic, posts, user, message: null });
+  //   }
+  //   res.render("posts", { topic, posts, user: null, message: null });
+  // } catch (error) {
+  //   console.log(error.message);
+  //   res.status(500).json({ message: "Server side error ocurred" });
+  // }
 };
 
 const getPosts = async (req, res) => {
   try {
-    const posts = await PostModel.find();
+    const posts = await PostModel.find({ topicID: req.params.topicID });
+    const topic = await TopicModel.findById(req.params.topicID);
     if (posts.length === 0)
-      return res.status(404).json({ message: "No post found" });
-    res.status(200).json(posts);
+      return res.render("posts", { topic, posts, user: null, message: "Nenhuma publicação foi feita neste tópico ainda" });
+    if (req.user) {
+      const user = await UserModel.findById(req.user.id, { userName: 1, avatar: 1, id: 1});
+      return res.render("posts", { topic, posts, user, message: null });
+    }
+    res.render("posts", { topic, posts, user: null, message: null });
   } catch (error) {
     console.log(error.message);
     res.status(500).json({ message: "Server side error ocurred" });
