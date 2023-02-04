@@ -4,10 +4,7 @@ const PostModel = require("../models/postModel");
 
 const createComment = async (req, res) => {
   try {
-    const { authorID, postID } = req.params;
-    const authorIDExist = await UserModel.findById(authorID, { password: 0 });
-    const postIDExist = await PostModel.findById(postID);
-    if (!authorIDExist || !postIDExist) return res.status(404).json({ message: "User or Post not found." });
+    const { userID, postID } = req.params;
     const { content } = req.body;
     if (!content) {
       return res.redirect("/posts/post/"+postID);
@@ -27,7 +24,7 @@ const createComment = async (req, res) => {
     
     await CommentModel.create({
       post: postID,
-      user: authorID,
+      user: userID,
       content,
       date: formatDate(new Date()),
     });
