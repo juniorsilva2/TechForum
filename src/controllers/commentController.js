@@ -8,78 +8,75 @@ const createComment = async (req, res) => {
     const authorIDExist = await UserModel.findById(authorID, { password: 0 });
     const postIDExist = await PostModel.findById(postID);
     if (!authorIDExist || !postIDExist) return res.status(404).json({ message: "User or Post not found." });
-    
     const { content } = req.body;
-    if (!content) return res.status(404).json({ message: "Fields missing" });
-
-    const comment = await CommentModel.create({
-      postID,
-      authorID,
+    if (!content) {
+      return res.redirect("/post/"+postID);
+    }
+    
+    function padTo2Digits(num) {
+      return num.toString().padStart(2, '0');
+    }
+    
+    function formatDate(date) {
+      return [
+        padTo2Digits(date.getDate()),
+        padTo2Digits(date.getMonth() + 1),
+        date.getFullYear(),
+      ].join('/');
+    }
+    
+    await CommentModel.create({
+      post: postID,
+      user: authorID,
       content,
-      date: new Date()
+      date: formatDate(new Date()),
     });
 
-    res.status(200).json({ message: "Comment sucessfully created", comment });
+    res.redirect("/post/"+postID);
   } catch (error) {
     console.log(error.message);
-    res.status(500).json({ message: "Server side error ocurred" });
-  }
-};
-
-const getComment = async (req, res) => {
-  try {
-    const comment = await CommentModel.findById(req.params.id);
-    if (!comment) return res.status(404).json({ message: "Comment not found" });
-    res.status(200).json(comment);
-  } catch (error) {
-    console.log(error.message);
-    res.status(500).json({ message: "Server side error ocurred" });
-  }
-};
-
-const getComments = async (req, res) => {
-  try {
-    const comments = await CommentModel.find();
-    if (comments.length === 0)
-      return res.status(404).json({ message: "No comment found" });
-    res.status(200).json(comments);
-  } catch (error) {
-    console.log(error.message);
-    res.status(500).json({ message: "Server side error ocurred" });
+    res.redirect("/");
   }
 };
 
 const updateComment = async (req, res) => {
   try {
-    const comment = await CommentModel.findById(req.params.id);
-    if (!comment) return res.status(404).json({ message: "Comment not found" });
+    const user = await UserModel.findById(req.user.id, { userName: 1, avatar: 1 });
+    const comment = await CommentModel.findById(req.params.commentID);
     const { content } = req.body;
-    if (!content) return res.status(400).json({ message: "Fields missing" });
-    
-    const commentUpdated = await CommentModel.findByIdAndUpdate(req.params.id, req.body);
-    res.status(200).json({ message: "Comment successfully updated", commentUpdated });
+    if (!content) return res.render("commentEdit", { message: "Por favor preencha o comentário", user, comment });
+    await CommentModel.findByIdAndUpdate(req.params.commentID, req.body);
+    res.redirect("/perfil");
   } catch (error) {
     console.log(error.message);
-    res.status(500).json({ message: "Server side error ocurred" });
+    res.redirect("/");
   }
 };
 
 const deleteComment = async (req, res) => {
   try {
-    const comment = await CommentModel.findById(req.params.id);
-    if (!comment) return res.status(404).json({ message: "Comment not found" });
-    await CommentModel.findByIdAndDelete(req.params.id);
-    res.status(200).json({ message: "Comment successfully deleted", comment });
+    await CommentModel.findByIdAndDelete(req.params.commentID);
+    res.redirect("/perfil");
   } catch (error) {
     console.log(error.message);
-    res.status(500).json({ message: "Server side error ocurred" });
+    res.redirect("/");
   }
 };
 
+const updatePage = async (req, res) => {
+  try {
+    const user = await UserModel.findById(req.user.id, { userName: 1, avatar: 1 });
+    const comment = await CommentModel.findById(req.params.commentID);
+    res.render("commentEdit", { message: null, user, comment });
+  } catch (error) {
+    console.log(error.message);
+    res.redirect("/");
+  }
+}
+
 module.exports = {
   createComment,
-  getComment,
-  getComments,
   updateComment,
   deleteComment,
+  updatePage,
 };

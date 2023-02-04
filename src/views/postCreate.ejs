@@ -1,0 +1,22 @@
+<%- include('navLoggedIn.ejs'); %>
+
+    <div class="content">
+        <form action="/post/create/<%= topicID %>" class="form-cadastro" method="post"> 
+            <hgroup>
+                <h1>Novo Post</h1>
+                <h3>Preencha os campos abaixo para criar um novo post</h3>
+            </hgroup>
+
+            <% if (message) { %>
+                <p><label style="color:#F44336"><%= message %></label></p>
+            <% } %>
+
+            <input type="text" name="title" placeholder="Título">
+            <textarea name="content" class="textarea" placeholder="Conteúdo" style="color:aliceblue; white-space: pre-wrap"></textarea>
+            <input type="submit" value="Postar">
+            <a href="/" class="link">Voltar</a>
+        </form>
+   </div>
+
+</body>
+</html>

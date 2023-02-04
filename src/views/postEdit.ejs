@@ -1,0 +1,22 @@
+<%- include('navLoggedIn.ejs'); %>
+
+
+    <div class="containerPrincipal">
+        <form action="/post/edit/<%= post.id %>" method="post" class="form"> 
+            <hgroup>
+                <h1>Preencha os campos abaixo para modificar seu post</h1>
+            </hgroup>
+
+            <% if (message) { %>
+                <p><label style="color:#F44336"><%= message %></label></p>
+            <% } %>
+            
+            <input type="text" name="title" value="<%= post.title %>">
+            <textarea name="content" class="textarea" style="color:aliceblue; white-space: pre-wrap"><%= post.content %></textarea>
+            <input type="submit" value="Salvar">
+            <a href="/perfil" class="link">Voltar</a>
+        </form>
+   </div>
+
+</body> 
+</html>

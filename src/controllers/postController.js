@@ -5,51 +5,56 @@ const CommentModel = require("../models/commentModel");
 
 const createPost = async (req, res) => {
   try {
-    const { authorID, topicID } = req.params;
-    const authorIDExist = await UserModel.findById(authorID, { password: 0 });
-    const topicIDExist = await TopicModel.findById(topicID);
-    if (!authorIDExist || !topicIDExist) return res.status(404).json({ message: "User or Topic not found." });
-    
+    const { topicID } = req.params;
     const { title, content } = req.body;
-    if (!title || !content) return res.status(400).json({ message: "Fields missing" });
+    const user = await UserModel.findById(req.user.id, { password: 0 });
+    
+    if (!title || !content) return res.render("postCreate", { message: "Por favor preencha todos os campos", user, topicID});
+
+    function padTo2Digits(num) {
+      return num.toString().padStart(2, '0');
+    }
+    
+    function formatDate(date) {
+      return [
+        padTo2Digits(date.getDate()),
+        padTo2Digits(date.getMonth() + 1),
+        date.getFullYear(),
+      ].join('/');
+    }
 
     const post = await PostModel.create({
-      topicID,
-      authorID,
+      topic: topicID,
+      user: user._id,
       title,
       content,
-      date: new Date()
+      date: formatDate(new Date()),
     });
 
-    const reputationUpdated = Number(authorIDExist.reputation) + 10;
-    await UserModel.findByIdAndUpdate({ _id: authorID }, { reputation: reputationUpdated });
-    res.status(200).json({ message: "Post successfully created", post });
+    const reputationUpdated = Number(user.reputation) + 10;
+    await UserModel.findByIdAndUpdate({ _id: user._id }, { reputation: reputationUpdated });
+    res.redirect("/");
   } catch (error) {
     console.log(error.message);
-    res.status(500).json({ message: "Server side error ocurred" });
+    res.redirect("/");
   }
 };
 
 const getPost = async (req, res) => {
-  // try {
-  //   const post = await PostModel.findById(req.params.postID);
-  //   const author = await UserModel.find(post.authorID);
-  //   const comments = await CommentModel.find({ postID: post.id });
-  //   const users = await UserModel.find();
-  //   const commentUsers = comments.forEach((comment) => {
-  //     if (comment.authorID === user)
-  //   })
-  //   if (comments.length === 0)
-  //     return res.render("post", { post, comments, user: null, message: "Nenhum comentário foi feito ainda" });
-  //   if (req.user) {
-  //     const user = await UserModel.findById(req.user.id, { userName: 1, avatar: 1, id: 1});
-  //     return res.render("post", { topic, posts, user, message: null });
-  //   }
-  //   res.render("posts", { topic, posts, user: null, message: null });
-  // } catch (error) {
-  //   console.log(error.message);
-  //   res.status(500).json({ message: "Server side error ocurred" });
-  // }
+  try {
+    const post = await PostModel.findById(req.params.postID).populate('user')
+    const comments = await CommentModel.find({ post: post._id }).populate('user')
+    if (req.user) {
+      const user = await UserModel.findById(req.user.id, { userName: 1, avatar: 1});
+      if (!comments) return res.render("post", { post, comments: null, user, message: "Este post ainda não possui comentários" });
+      return res.render("post", { post, comments, user, message: null });
+    }
+    if (!comments) return res.render("post", { post, comments: null, user:null, message: "Este post ainda não possui comentários" });
+    res.render("post", { post, comments, user: null, message: null });
+  } catch (error) {
+    console.log(error.message);
+    res.redirect("/");
+  }
 };
 
 const getPosts = async (req, res) => {
@@ -65,36 +70,55 @@ const getPosts = async (req, res) => {
     res.render("posts", { topic, posts, user: null, message: null });
   } catch (error) {
     console.log(error.message);
-    res.status(500).json({ message: "Server side error ocurred" });
+    res.redirect("/");
   }
 };
 
 const updatePost = async (req, res) => {
   try {
-    const post = await PostModel.findById(req.params.id);
-    if (!post) return res.status(404).json({ message: "Post not found" });
+    const user = await UserModel.findById(req.user.id, { userName: 1, avatar: 1 });
+    const post = await PostModel.findById(req.params.postID);
     const { title, content } = req.body;
-    if (!title || !content) return res.status(400).json({ message: "Fields missing" });
-    
-    const postUpdated = await PostModel.findByIdAndUpdate(req.params.id, req.body);
-    res.status(200).json({ message: "Post successfully updated", postUpdated });
+    if (!title || !content) return res.render("postEdit", { message: "Preencha todos os campos", user, post });
+    await PostModel.findByIdAndUpdate(req.params.postID, req.body);
+    res.redirect("/perfil");
   } catch (error) {
     console.log(error.message);
-    res.status(500).json({ message: "Server side error ocurred" });
+    res.redirect("/");
   }
 };
 
 const deletePost = async (req, res) => {
   try {
-    const post = await PostModel.findById(req.params.id);
-    if (!post) return res.status(404).json({ message: "Post not found" });
-    await PostModel.findByIdAndDelete(req.params.id);
-    res.status(200).json({ message: "Post successfully deleted", post });
+    await CommentModel.deleteMany({ post: req.params.postID });
+    await PostModel.findByIdAndDelete(req.params.postID);
+    res.redirect("/perfil");
   } catch (error) {
     console.log(error.message);
-    res.status(500).json({ message: "Server side error ocurred" });
+    res.redirect("/");
   }
 };
+
+const createPage = async (req, res) => {
+  try {
+    const user = await UserModel.findById(req.user.id, { userName: 1, avatar: 1 });
+    res.render("postCreate", { message: null, user, topicID: req.params.topicID});
+  } catch (error) {
+    console.log(error.message);
+    res.redirect("/");
+  }
+}
+
+const updatePage = async (req, res) => {
+  try {
+    const user = await UserModel.findById(req.user.id, { userName: 1, avatar: 1 });
+    const post = await PostModel.findById(req.params.postID);
+    res.render("postEdit", { message: null, user, post });
+  } catch (error) {
+    console.log(error.message);
+    res.redirect("/");
+  }
+}
 
 module.exports = {
   createPost,
@@ -102,4 +126,6 @@ module.exports = {
   getPosts,
   updatePost,
   deletePost,
+  createPage,
+  updatePage,
 };

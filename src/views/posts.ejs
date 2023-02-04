@@ -15,12 +15,16 @@
                     </div>
                 </summary>
 
+                <% if (user) { %>
+                    <a href="/post/create/<%= topic.id %>">criar post placeholder</a>
+                <% } %>
+
                 <% if (message) { %>
                     <p><label><%= message %></label></p>
                 <% } %>
 
                 <% posts.forEach( post => { %>
-                    <li><a href="/post/<%= post.id %>"><%= post.title %></a></li>
+                    <li><a href="/posts/post/<%= post.id %>"><%= post.title %></a></li>
                 <% }) %>
 
             </details>

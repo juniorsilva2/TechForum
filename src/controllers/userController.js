@@ -10,7 +10,7 @@ const loginPage = async (req, res) => {
     res.render("login", { message: null });
   } catch (error) {
     console.log(error.message);
-    res.status(500).json({ message: "Server side error ocurred" });
+    res.redirect("/");
   }
 };
 
@@ -19,7 +19,7 @@ const signInPage = async (req, res) => {
     res.render("signIn", {message: null});
   } catch (error) {
     console.log(error.message);
-    res.status(500).json({ message: "Server side error ocurred" });
+    res.redirect("/");
   };
 };
 
@@ -42,7 +42,7 @@ const login = async (req, res, next) => {
   })(req,res,next);
   } catch (error) {
     console.log(error.message);
-    res.status(500).json({ message: "Server side error ocurred" });
+    res.redirect("/");
   }
 };
 
@@ -54,7 +54,7 @@ const logout = async (req, res) => {
     })
   } catch (error) {
     console.log(error.message);
-    res.status(500).json({ message: "Server side error ocurred" });
+    res.redirect("/");
   }
 };
 
@@ -88,7 +88,7 @@ const register = async (req, res) => {
     res.status(201).redirect("/login");
   } catch (error) {
     console.log(error.message);
-    res.status(500).json({ message: "Server side error ocurred" });
+    res.redirect("/");
   }
 };
 
@@ -96,12 +96,12 @@ const getUser = async (req, res) => {
   try {
     const user = await UserModel.findById(req.user.id);
     if (!user) return res.status(404).render("login", { message: "Usuário não encontrado" });
-    const posts = await PostModel.find({ authorID: user.id });
-    const comments = await CommentModel.find({ authorID: user.id });
+    const posts = await PostModel.find({ user: user.id });
+    const comments = await CommentModel.find({ user: user.id });
     res.render("perfil", { user, posts, comments });
   } catch (error) {
     console.log(error.message);
-    res.status(500).json({ message: "Server side error ocurred" });
+    res.redirect("/");
   }
 };
 
@@ -111,18 +111,21 @@ const updatePage = async (req, res) => {
     res.render("perfilEdit", { message: null, user });
   } catch (error) {
     console.log(error.message);
-    res.status(500).json({ message: "Server side error ocurred" });
+    res.redirect("/");
   }
 };
 
 const updateUser = async (req, res) => {
   try {
     const { userName, password, confirmPassword } = req.body;
-    const user = await UserModel.findById(req.user.id, { userName: 1, avatar: 1});
+    const user = await UserModel.findById(req.user.id, { userName: 1, avatar: 1, _id: 1 });
+    console.log(user.id);
     if (!userName)
       return res.render("perfilEdit", { message: "Nome de usuário ausente", user });
-    if (user && userName !== user.userName)
-      return res.render("perfilEdit", { message: "Nome de usuário já existe", user });
+    const userExist = await UserModel.findOne({ userName: userName }, { userName: 1, _id: 1 });
+    if (userExist)
+      if (user.id !== userExist.id && user.userName == userExist.userName)
+        return res.render("perfilEdit", { message: "Nome de usuário já existe", user });
     if (password !== confirmPassword)
       return res.render("perfilEdit", { message: "Senhas não conferem", user });
     if (userName !== user.userName) {
@@ -143,7 +146,7 @@ const updateUser = async (req, res) => {
     res.redirect("/perfil");
   } catch (error) {
     console.log(error.message);
-    res.status(500).json({ message: "Server side error ocurred" });
+    res.redirect("/");
   }
 };
 
@@ -153,7 +156,7 @@ const updateAvatarPage = async (req, res) => {
     res.render("perfilAvatar", { message: null, user });
   } catch (error) {
     console.log(error.message);
-    res.status(500).json({ message: "Server side error ocurred" });
+    res.redirect("/");
   }
 };
 
@@ -170,7 +173,7 @@ const updateAvatar = async (req, res) => {
     res.redirect("/perfil");
   } catch (error) {
     console.log(error.message);
-    res.status(500).json({ message: "Server side error ocurred" });
+    res.redirect("/");
   }
 };
 
@@ -180,7 +183,7 @@ const deletePage = async (req, res) => {
     res.render("perfilDelete", { message: null, user });
   } catch (error) {
     console.log(error.message);
-    res.status(500).json({ message: "Server side error ocurred" });
+    res.redirect("/");
   }
 };
 
@@ -203,7 +206,7 @@ const deleteUser = async (req, res) => {
     res.redirect("/");
   } catch (error) {
     console.log(error.message);
-    res.status(500).json({ message: "Server side error ocurred" });
+    res.redirect("/");
   }
 };
 

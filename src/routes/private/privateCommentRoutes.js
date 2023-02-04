@@ -3,10 +3,9 @@ const router = express.Router();
 const authenticated = require("../../middleware/authenticated");
 const commentController = require("../../controllers/commentController");
 
-// router.post("/api/comment/:authorID/:postID", checkToken, commentController.createComment);
-// router.get("/api/comment/:id", checkToken, commentController.getComment);
-// router.get("/api/comments", checkToken, commentController.getComments);
-// router.put("/api/comment/:id", checkToken, commentController.updateComment);
-// router.delete("/api/comment/:id", checkToken, commentController.deleteComment);
+router.post("/comment/create/:authorID/:postID", authenticated, commentController.createComment);
+router.get("/comment/edit/:commentID", authenticated, commentController.updatePage);
+router.post("/comment/edit/:commentID", authenticated, commentController.updateComment);
+router.get("/comment/delete/:commentID", authenticated, commentController.deleteComment);
 
 module.exports = router;

@@ -1,12 +1,14 @@
 const mongoose = require("mongoose");
 
 const postSchema = new mongoose.Schema({
-  topicID: {
-    type: String,
+  topic: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "topic",
     required: true,
   },
-  authorID: {
-    type: String,
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "user",
     required: true,
   },
   title: {
@@ -18,9 +20,10 @@ const postSchema = new mongoose.Schema({
     required: true,
   },
   date: {
-    type: Date,
+    type: String,
     required: true,
   },
+  comments: [{ type: mongoose.Schema.Types.ObjectId, ref: 'comment' }],
 });
 
 const PostModel = mongoose.model("post", postSchema);

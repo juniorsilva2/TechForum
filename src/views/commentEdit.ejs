@@ -1,0 +1,21 @@
+<%- include('navLoggedIn.ejs'); %>
+
+
+    <div class="containerPrincipal">
+        <form action="/comment/edit/<%= comment.id %>" method="post" class="form"> 
+            <hgroup>
+                <h1>Preencha o campo abaixo para modificar seu comentário</h1>
+            </hgroup>
+
+            <% if (message) { %>
+                <p><label style="color:#F44336"><%= message %></label></p>
+            <% } %>
+
+            <textarea name="content" class="textarea" style="color:aliceblue; white-space: pre-wrap"><%= comment.content %></textarea>
+            <input type="submit" value="Salvar">
+            <a href="/perfil" class="link">Voltar</a>
+        </form>
+   </div>
+
+</body> 
+</html>

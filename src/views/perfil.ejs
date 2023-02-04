@@ -21,12 +21,12 @@
                     <% posts.forEach(post => { %>
                         <div class="divpost">
                             <div class="post">
-                                <a href="/post/<%= post.id %>"><b><%= post.title %></b></a>
+                                <a href="/posts/post/<%= post.id %>"><b><%= post.title %></b></a>
                                 <p><%= post.date %></p>
                             </div>
                             <div class="actions">
-                                <a href="">Editar</a>
-                                <a href="">Excluir</a>
+                                <a href="/post/edit/<%= post.id %>">Editar</a>
+                                <a href="/post/delete/<%= post.id %>">Excluir</a>
                             </div>
                         </div>
                     <% }) %>
@@ -40,12 +40,12 @@
                     <% comments.forEach(comment => { %>
                         <div class="divpost">
                             <div class="post">
-                                <a href="/post/<%= comment.postID %>"><b><%= comment.content %></b></a>
+                                <a href="/posts/post/<%= comment.post %>"><b><%= comment.content %></b></a>
                                 <p><%= comment.date %></p>
                             </div>
                             <div class="actions">
-                                <a href="">Editar</a>
-                                <a href="">Excluir</a>
+                                <a href="/comment/edit/<%= comment.id %>">Editar</a>
+                                <a href="/comment/delete/<%= comment.id %>">Excluir</a>
                             </div>
                         </div>
                     <% })%>

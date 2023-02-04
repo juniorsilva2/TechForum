@@ -27,6 +27,8 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  posts: [{ type: mongoose.Schema.Types.ObjectId, ref: 'post' }],
+  comments: [{ type: mongoose.Schema.Types.ObjectId, ref: 'comment' }],
 });
 
 const UserModel = mongoose.model("user", userSchema);

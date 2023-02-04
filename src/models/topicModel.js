@@ -6,6 +6,7 @@ const topicSchema = new mongoose.Schema({
     required: true,
     unique: true,
   },
+  posts: [{ type: mongoose.Schema.Types.ObjectId, ref: 'post' }],
 });
 
 const TopicModel = mongoose.model("topic", topicSchema);
