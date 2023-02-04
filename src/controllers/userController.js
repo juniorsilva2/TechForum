@@ -48,7 +48,6 @@ const login = async (req, res, next) => {
 
 const logout = async (req, res) => {
   try {
-    req.session = null;
     req.logout(function (err) {
       if (err) return next(err);
       res.redirect("/");
