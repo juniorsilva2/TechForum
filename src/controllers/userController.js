@@ -61,15 +61,12 @@ const logout = async (req, res) => {
 const register = async (req, res) => {
   const { realName, userName, email, password, confirmPassword } = req.body;
   if (!realName || !userName || !email || !password || !confirmPassword)
-    return res.status(400).json({ message: "Fields missing" });
+    return res.render("signIn", {message: "Por favor preencha todos os campos"});
   if (password !== confirmPassword)
-    return res.status(400).json({ message: "Passwords do not match" });
+    return res.render("signIn", {message: "As senhas não conferem"});
 
   const userExist = await UserModel.findOne({ email });
-  if (userExist)
-    return res
-      .status(422)
-      .json({ message: "User already registered, try using another email" });
+  if (userExist) return res.render("signIn", {message: "Email já cadastrado, por favor utilize outro email."});
 
   const hashedPassword = await bcrypt.hash(
     password,
