@@ -10,7 +10,7 @@ const createComment = async (req, res) => {
     if (!authorIDExist || !postIDExist) return res.status(404).json({ message: "User or Post not found." });
     const { content } = req.body;
     if (!content) {
-      return res.redirect("/post/"+postID);
+      return res.redirect("/posts/post/"+postID);
     }
     
     function padTo2Digits(num) {
@@ -32,7 +32,7 @@ const createComment = async (req, res) => {
       date: formatDate(new Date()),
     });
 
-    res.redirect("/post/"+postID);
+    res.redirect("/posts/post/"+postID);
   } catch (error) {
     console.log(error.message);
     res.redirect("/");
