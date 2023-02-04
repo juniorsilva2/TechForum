@@ -4,7 +4,8 @@ const express = require("express");
 const path = require("path");
 const app = express();
 const bodyParser = require("body-parser");
-const session = require("cookie-session");
+const session = require("express-session");
+const MemoryStore = require('memorystore')(session)
 const passport = require("passport");
 const publicUserRoutes = require("./routes/public/publicUserRoutes");
 const publicTopicRoutes = require("./routes/public/publicTopicRoutes");
@@ -27,7 +28,10 @@ app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
-    cookie: { maxAge: 60 * 60 * 1000}
+    cookie: { maxAge: 60 * 60 * 1000 },
+    store: new MemoryStore({
+        checkPeriod: 60 * 60 * 1000
+    })
 }));
 
 app.use(passport.initialize());
