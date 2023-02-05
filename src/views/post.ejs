@@ -15,7 +15,9 @@
             <div>
                 <% if ( post.user ) { %>
                     <div>
-                        <img src="/upload/<%= post.user.avatar %>">
+                        <a href="/perfil/public/<%= post.user.userName %>">
+                            <img src="/upload/<%= post.user.avatar %>">
+                        </a>
                         <p><%= post.user.userName %></p>
                     </div>
                 <% } else { %>
@@ -32,7 +34,9 @@
         <div class="comment">
             <div class="imgUser">
                 <% if ( post.user ) { %>
-                    <img src="/upload/<%= post.user.avatar %>">
+                    <a href="/perfil/public/<%= post.user.userName %>">
+                        <img src="/upload/<%= post.user.avatar %>">
+                    </a>
                     <b><%= post.user.userName %></b>
                 <% } else { %>
                     <img src="/upload/userDeleted.png">
@@ -60,7 +64,9 @@
                 <div class="comment">
                     <div class="imgUser">
                         <% if ( comment.user ) { %>
-                            <img src="/upload/<%= comment.user.avatar %>">
+                            <a href="/perfil/public/<%= comment.user.userName %>">
+                                <img src="/upload/<%= comment.user.avatar %>">
+                            </a>
                             <b><%= comment.user.userName %></b>
                         <% } else { %>
                             <img src="/upload/userDeleted.png">
@@ -84,9 +90,9 @@
         <% } %>
 
         <% if (user) { %>
-        <form action="/comment/create/<%= user.id %>/<%= post.id %>" method="post">
+        <form action="/comment/create/<%= user.id %>/<%= post.id %>" method="post" class="handleComment">
             <!-- <input type="text" name="content" placeholder="Comente essa postagem"> -->
-            <textarea name="content" class="textarea" placeholder="Comente essa postagem"></textarea>
+            <textarea name="content" class="input-comment"></textarea>
             <button type="submit" class="btnComentar">
                 Comentar
             </button>

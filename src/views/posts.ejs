@@ -6,18 +6,26 @@
 
     <div class="content">
         <div class="center">
-    
+
+            
+
             <details open>
                 <summary>
                     <div>
                         <i data-feather="message-circle"></i>
                         <h3><%= topic.name %><h3>
-                    </div>
-                </summary>
+                        </div>
+                    </summary>
+                    
+                    <% if (user) { %>
+                        <div class="headerespecifictop">
+                            <a href="/post/create/<%= topic.id %>">
+                                <i data-feather="plus"></i>
+                                Post
+                            </a>
+                        </div>
+                    <% } %>
 
-                <% if (user) { %>
-                    <a href="/post/create/<%= topic.id %>">criar post placeholder</a>
-                <% } %>
 
                 <% if (message) { %>
                     <p><label><%= message %></label></p>

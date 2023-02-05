@@ -80,6 +80,11 @@ nav {
     color: #fff;
 }
 
+nav > a > h1 {
+    margin: 0;
+    padding: 0;
+}
+
 nav div {
     display: flex;
     align-items: center;
@@ -93,12 +98,45 @@ nav>div>div {
     margin-right: 20px;
 }
 
-nav>div>div>a {
+nav > div > div > a {
     font-size: 15px;
     color: #fff;
+    padding: 0;
+    margin: 0;
 }
 
-nav>div>img {
+nav > div > div > a:hover {
+    color: #28b67E;
+    background: var(--primary);
+}
+
+.defaultLogo{
+    color: aliceblue;
+    padding: 0;
+    margin: 0;
+}
+
+.defaultLogo:hover {
+    color: var(--primary-hover);
+}
+
+.defaultLinkLogo {
+    background-color: #1D4C4F;
+}
+
+.nickName {
+    font-weight: bold;
+    font-size: 20px;
+    background: var(--primary);
+}
+
+.imgP {
+    margin: 0;
+    padding: 0;
+    width: 50px;
+}
+
+nav>div> a > img {
     width: 50px;
     height: 50px;
     border-radius: 10px;
@@ -106,20 +144,41 @@ nav>div>img {
     border: 2px solid #ffff;
 }
 
-nav>div>a {
+
+/* nav>div>a {
     width: 100px;
     text-align: center;
     margin: 0;
+} */
+
+.btn1 {
+    width: 120px;
+    text-align: center;
+    margin-right: 15px;
+    color: aliceblue;
+    border: solid 1px #28b67E;
+}
+.btn1:hover {
+    background-color: var(--primary-hover);
 }
 
-nav>div>a:nth-child(1) {
-    margin-right: 20px;
+.btn2 {
+    width: 100px;
+    text-align: center;
+    color: aliceblue;
+    border: solid 1px #28b67E;
+}
+.btn2:hover {
+    background-color: var(--primary-hover);
 }
 
-nav>div>a:nth-child(2) {
-    background-color: #1095c1;
-    color: #ffff;
+/* .btns > a{
+    color: #FFF;
 }
+
+.btns > a:nth-child(2) {
+    background-color:#28b67E;
+} */
 
 nav>h1 {
     margin: 0;
@@ -170,6 +229,7 @@ details>li {
 
 details>li a {
     color: #28b67E;
+    background-color: #0D1321;
 }
 
 hgroup>div {
@@ -223,8 +283,7 @@ hgroup img {
 
 .btnComentar {
     width: 150px;
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
+    
 }
 
 .comment {
@@ -246,13 +305,32 @@ form input {
     color: #fff;
 }
 
-/* .comment p {
+.comment p {
     overflow: hidden;
     text-overflow: ellipsis; 
     display: -webkit-box;
-    -webkit-line-clamp: 2; 
     -webkit-box-orient: vertical;
-} */
+
+}
+
+.commenthiddenperfil {
+    overflow: hidden;
+    text-overflow: ellipsis; 
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+}
+
+.handleComment {
+    display: flex;
+    align-items: flex-end;
+    flex-direction: column;
+}
+
+.input-comment {
+    resize: vertical;
+    min-height: 200px;
+}
 
 .imgUser {
     padding-right: 10px;
@@ -261,9 +339,9 @@ form input {
     align-items: center;
 }
 
-.imgUser>img {
-    width: 100%;
-    height: 200px;
+
+.imgUser img {
+    width: 200px;
     border-radius: 10px;
     object-fit: cover;
 }
@@ -276,12 +354,15 @@ form input {
     display: grid;
     place-items: center;
     border-radius: 5px;
-    margin-top: 145px;
+    margin-top: 140px;
     margin-left: 130px;
 }
 
 .link {
     color: #28b67E;
+}
+.linkdelete {
+    color: rgb(170, 8, 8);
 }
 
 .infoUser {
@@ -303,7 +384,6 @@ form input {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-
 }
 
 .post p {
@@ -314,6 +394,7 @@ form input {
 
 .post b {
     font-size: 25px;
+    background-color: #0D1321;
 }
 
 .actions {
@@ -325,6 +406,7 @@ form input {
 .actions a {
     display: grid;
     place-items: center;
+    margin-left: 12px;
 }
 
 .actions a:nth-child(1) {
@@ -337,7 +419,7 @@ form input {
 .actions a:nth-child(2) {
     background-color: red;
     color: #ffff;
-    padding: 8px;
+    padding: 10px;
     border-radius: 10px;
 }
 
@@ -403,4 +485,25 @@ form input {
 
 .title {
     font-size: 50px;
+}
+
+.headerespecifictop {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.headerespecifictop > a {
+    width: 100px;
+    display: flex;
+    color: #fff;
+    justify-content: space-evenly;
+    align-items: center;
+    padding: 8px;
+    border-radius: 5px;
+    margin-bottom: 0px;
+}
+
+.headerespecifictop > a:hover {
+    background-color: var(--primary-hover);
 }

@@ -3,15 +3,18 @@
 <body>
 
     <nav>
-        <h1>Tech Forum</h1>
+        <a href="/" class="defaultLinkLogo">
+            <h1 class="defaultLogo">Tech Forum</h1>
+        </a>
 
         <div>
             <div>
-                <a href="/perfil"><span><%= user.userName %></span></a>
+                <a href="/perfil" class="nickName"><%= user.userName %></a>
                 <a href="/logout">Sair</a>
             </div>
-            <img src="/upload/<%= user.avatar %>">
+            <a href="/perfil" class="imgP">
+                <img src="/upload/<%= user.avatar %>">
+            </a>
         </div>
-
 
     </nav>

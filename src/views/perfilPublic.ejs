@@ -1,18 +1,17 @@
-<%- include('navLoggedIn.ejs'); %>
+<% if (user) { %>
+    <%- include('navLoggedIn.ejs'); %>
+<% } else {%>
+    <%- include('navDefault.ejs'); %>
+<% } %>
 
     <div class="content">
         <div class="center">
 
             <div class="comment">
                 <div class="imgUser">
-                    <a href="/perfil/avatar" class="edit">
-                        <i data-feather="edit"></i>
-                    </a>
-                    <img src="/upload/<%= user.avatar%>">
-                    <b><%= user.userName %></b>
-                    <p><%= user.reputation %> pontos.</p>
-                    <a href="/perfil/edit" class="link">Editar Perfil</a>
-                    <a href="/perfil/delete" class="linkdelete" style="color: #F44336">Deletar Perfil</a>
+                    <img src="/upload/<%= publicUser.avatar%>">
+                    <b><%= publicUser.userName %></b>
+                    <p><%= publicUser.reputation %> pontos.</p>
                 </div>
                 <div>
                     <b>Postagens</b>
@@ -23,10 +22,6 @@
                             <div class="post">
                                 <a href="/posts/post/<%= post.id %>" style="background-color: #0D1321;"><b><%= post.title %></b></a>
                                 <p><%= post.date %></p>
-                            </div>
-                            <div class="actions">
-                                <a href="/post/edit/<%= post.id %>">Editar</a>
-                                <a href="/post/delete/<%= post.id %>">Excluir</a>
                             </div>
                         </div>
                     <% }) %>
@@ -42,10 +37,6 @@
                             <div class="post">
                                 <a href="/posts/post/<%= comment.post %>"><b class="commenthiddenperfil"><%= comment.content %></b></a>
                                 <p><%= comment.date %></p>
-                            </div>
-                            <div class="actions">
-                                <a href="/comment/edit/<%= comment.id %>">Editar</a>
-                                <a href="/comment/delete/<%= comment.id %>">Excluir</a>
                             </div>
                         </div>
                     <% })%>

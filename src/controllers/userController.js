@@ -209,6 +209,25 @@ const deleteUser = async (req, res) => {
   }
 };
 
+const publicPerfilPage = async (req, res) => {
+  try {
+    const publicUser = await UserModel.findOne({ userName: req.params.userName }, { userName: 1, avatar: 1, reputation: 1 });
+    if (!publicUser) return res.redirect("/");
+    const publicUserID = await UserModel.findOne({ userName: req.params.userName }, { _id: 1 });
+    const posts = await PostModel.find({ user: publicUserID._id }, { _id: 1, title: 1, date: 1 });
+    const comments = await CommentModel.find({ user: publicUserID._id }, { post: 1, content: 1, date: 1 });
+    
+    if (req.user) {
+      const user = await UserModel.findById(req.user.id, { userName: 1, avatar: 1 , id: 1});
+      return res.render("perfilPublic", { user, publicUser, posts, comments });
+    }
+    res.render("perfilPublic", { user: null, publicUser, posts, comments });
+  } catch (error) {
+    console.log(error.message);
+    res.redirect("/");
+  }
+};
+
 module.exports = {
   login,
   logout,
@@ -222,4 +241,5 @@ module.exports = {
   updatePage,
   updateAvatarPage,
   deletePage,
+  publicPerfilPage,
 };
