@@ -9,7 +9,7 @@ A discussion forum template that i am using to learn about authentication and re
 Project deployed at:
 
 ```bash
-  https://
+  https://techforum.onrender.com
 ```
 
 ## Authors
