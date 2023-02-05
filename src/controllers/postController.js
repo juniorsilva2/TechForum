@@ -61,8 +61,13 @@ const getPosts = async (req, res) => {
   try {
     const posts = await PostModel.find({ topicID: req.params.topicID });
     const topic = await TopicModel.findById(req.params.topicID);
-    if (posts.length === 0)
+    if (posts.length === 0) {
+      if (req.user) {
+        const user = await UserModel.findById(req.user.id, { userName: 1, avatar: 1, id: 1 });
+        return res.render("posts", { topic, posts, user, message: "Nenhuma publicação foi feita neste tópico ainda" });
+      } 
       return res.render("posts", { topic, posts, user: null, message: "Nenhuma publicação foi feita neste tópico ainda" });
+    }
     if (req.user) {
       const user = await UserModel.findById(req.user.id, { userName: 1, avatar: 1, id: 1});
       return res.render("posts", { topic, posts, user, message: null });
