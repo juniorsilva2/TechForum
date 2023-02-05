@@ -70,9 +70,21 @@ const updatePage = async (req, res) => {
   }
 }
 
+const deletePage = async (req, res) => {
+  try {
+    const user = await UserModel.findById(req.user.id, { userName: 1, avatar: 1 });
+    const comment = await CommentModel.findById(req.params.commentID);
+    res.render("commentDelete", { user, comment });
+  } catch (error) {
+    console.log(error.message);
+    res.redirect("/");
+  }
+}
+
 module.exports = {
   createComment,
   updateComment,
   deleteComment,
   updatePage,
+  deletePage,
 };

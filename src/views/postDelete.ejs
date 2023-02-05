@@ -1,0 +1,17 @@
+<%- include('navLoggedIn.ejs'); %>
+
+
+    <div class="containerPrincipal">
+        <form action="/post/delete/<%= post.id %>" method="post" class="form"> 
+
+            <hgroup>
+                <h1>Tem certeza que deseja apagar o post ?</h1>
+            </hgroup>
+
+            <input type="submit" style="background-color: #E73C37" value="Apagar Post">
+            <a href="/perfil" class="link">Voltar</a>
+        </form>
+   </div>
+
+</body> 
+</html>

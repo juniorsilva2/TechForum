@@ -120,6 +120,17 @@ const updatePage = async (req, res) => {
   }
 }
 
+const deletePage = async (req, res) => {
+  try {
+    const user = await UserModel.findById(req.user.id, { userName: 1, avatar: 1 });
+    const post = await PostModel.findById(req.params.postID);
+    res.render("postDelete", { user, post });
+  } catch (error) {
+    console.log(error.message);
+    res.redirect("/");
+  }
+}
+
 module.exports = {
   createPost,
   getPost,
@@ -128,4 +139,5 @@ module.exports = {
   deletePost,
   createPage,
   updatePage,
+  deletePage,
 };
