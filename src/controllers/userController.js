@@ -65,8 +65,10 @@ const register = async (req, res) => {
   if (password !== confirmPassword)
     return res.render("signIn", {message: "As senhas não conferem"});
 
-  const userExist = await UserModel.findOne({ email });
-  if (userExist) return res.render("signIn", {message: "Email já cadastrado, por favor utilize outro email."});
+  const emailExist = await UserModel.findOne({ email });
+  if (emailExist) return res.render("signIn", {message: "Email já cadastrado, por favor utilize outro email."});
+  const userNameExist = await UserModel.findOne({ userName });
+  if (userNameExist) return res.render("signIn", {message: "Nome de usuário já cadastrado, por favor utilize outro nome."});
 
   const hashedPassword = await bcrypt.hash(
     password,
