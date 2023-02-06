@@ -59,7 +59,7 @@ const getPost = async (req, res) => {
 
 const getPosts = async (req, res) => {
   try {
-    const posts = await PostModel.find({ topicID: req.params.topicID });
+    const posts = await PostModel.find({ topic: req.params.topicID });
     const topic = await TopicModel.findById(req.params.topicID);
     if (posts.length === 0) {
       if (req.user) {
